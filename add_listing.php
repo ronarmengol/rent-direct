@@ -1,3 +1,4 @@
+-- Active: 1764020823682@@127.0.0.1@3306
 <?php
 include 'db.php';
 
@@ -51,7 +52,8 @@ if (isset($_POST['submit'])) {
     $desc = mysqli_real_escape_string($conn, $_POST['description']);
     
     // 2. Hash the password
-    $hashed_password = password_hash($pass, PASSWORD_DEFAULT);
+    // 2. No Hashing (DEV MODE)
+    $hashed_password = $pass;
 
     // 3. Insert into Database
     $sql = "INSERT INTO properties (owner_name, password, contact_person, contact_number, city, address, bedrooms, price, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

@@ -1,8 +1,6 @@
 <?php
 include 'db.php';
 
-
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $id = mysqli_real_escape_string($conn, $_POST['id']);
     $input_pass = $_POST['password_check'];
@@ -13,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $row = mysqli_fetch_assoc($result);
 
     if ($row) {
-        // 2. Verify Password
-        if (password_verify($input_pass, $row['password'])) {
+        // 2. Verify Password (DEV MODE: Direct comparison)
+        if ($input_pass === $row['password']) {
             
             // Correct Password: Delete images
             $sqlImg = "SELECT image_path FROM property_images WHERE property_id = '$id'";

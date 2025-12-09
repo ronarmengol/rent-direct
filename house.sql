@@ -1,3 +1,4 @@
+-- Active: 1764020823682@@127.0.0.1@3306@house
 DROP TABLE IF EXISTS property_images;
 DROP TABLE IF EXISTS properties;
 

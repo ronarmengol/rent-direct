@@ -1,6 +1,11 @@
 <?php
 include 'db.php';
 
+// Prevent browser caching to ensure fresh image order
+header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1
+header("Pragma: no-cache"); // HTTP 1.0
+header("Expires: 0"); // Proxies
+
 // 1. Check if ID is provided
 if (!isset($_GET['id'])) {
   header("Location: index.php");
@@ -19,8 +24,8 @@ if (!$property) {
   exit();
 }
 
-// 4. Fetch Images
-$sqlImg = "SELECT * FROM property_images WHERE property_id = '$id'";
+// 4. Fetch Images ordered by display_order
+$sqlImg = "SELECT * FROM property_images WHERE property_id = '$id' ORDER BY display_order ASC, id ASC";
 $resultImg = mysqli_query($conn, $sqlImg);
 ?>
 
@@ -57,6 +62,23 @@ $resultImg = mysqli_query($conn, $sqlImg);
       }, 15000);
     </script>
   <?php endif; ?>
+
+  <!-- Force reload when navigating back to this page -->
+  <script>
+    // Detect if page was loaded from cache (back button)
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        // Page was loaded from bfcache (back/forward cache)
+        window.location.reload();
+      }
+    });
+    
+    // Alternative method for older browsers
+    if (performance.navigation.type === 2) {
+      // Page was accessed by navigating back
+      window.location.reload();
+    }
+  </script>
 
   <!-- Navbar -->
   <nav class="navbar">
@@ -153,11 +175,33 @@ $resultImg = mysqli_query($conn, $sqlImg);
             <details>
               <summary>Manage Listing (Owner)</summary>
               <div class="owner-content">
-                <form action="delete_listing.php" method="POST" class="delete-form-stacked">
+                <form action="verify_admin.php" method="POST" class="delete-form-stacked">
                   <input type="hidden" name="id" value="<?php echo $property['id']; ?>">
-                  <input type="password" name="password_check" placeholder="Enter Password" required>
-                  <button type="submit" class="delete-btn full-width">Delete Listing</button>
+                  <input type="text" name="username" id="admin-username" placeholder="Enter Username" required style="margin-bottom: 10px;">
+                  <input type="password" name="password_check" id="admin-password" placeholder="Enter Password" required>
+                  <button type="submit" class="phone-btn full-width" id="admin-btn" disabled style="opacity: 0.5; cursor: not-allowed;">Admin</button>
                 </form>
+                <script>
+                  // Enable button only when both username and password are entered
+                  function checkFields() {
+                    var username = document.getElementById('admin-username').value;
+                    var password = document.getElementById('admin-password').value;
+                    var btn = document.getElementById('admin-btn');
+                    
+                    if (username.length > 0 && password.length > 0) {
+                      btn.disabled = false;
+                      btn.style.opacity = '1';
+                      btn.style.cursor = 'pointer';
+                    } else {
+                      btn.disabled = true;
+                      btn.style.opacity = '0.5';
+                      btn.style.cursor = 'not-allowed';
+                    }
+                  }
+                  
+                  document.getElementById('admin-username').addEventListener('input', checkFields);
+                  document.getElementById('admin-password').addEventListener('input', checkFields);
+                </script>
               </div>
             </details>
           </div>

@@ -105,7 +105,6 @@ $result = mysqli_query($conn, $sql);
             </a>
         </div>
         <div class="nav-links">
-            <a href="index.php" style="margin-right: 20px;">Rentals</a>
             <a href="add_listing.php" class="nav-btn">+ List Property</a>
         </div>
     </nav>
@@ -159,7 +158,7 @@ $result = mysqli_query($conn, $sql);
                 <?php while($row = mysqli_fetch_assoc($result)): ?>
                     <?php
                         $prop_id = $row['id'];
-                        $imgSql = "SELECT image_path FROM property_images WHERE property_id = '$prop_id' LIMIT 1";
+                        $imgSql = "SELECT image_path FROM property_images WHERE property_id = '$prop_id' ORDER BY display_order ASC, id ASC LIMIT 1";
                         $imgResult = mysqli_query($conn, $imgSql);
                         $imgData = mysqli_fetch_assoc($imgResult);
                         $thumbnail = $imgData ? "uploads/" . $imgData['image_path'] : "https://via.placeholder.com/300";

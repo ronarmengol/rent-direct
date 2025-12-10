@@ -101,7 +101,38 @@ $resultImg = mysqli_query($conn, $sqlImg);
       </div>
       <div class="prop-meta">
         <span class="badge"><?php echo htmlspecialchars($property['bedrooms']); ?> Beds</span>
-        <span class="badge">City View</span>
+        <span class="badge"><?php echo htmlspecialchars($property['bathrooms']); ?> Baths</span>
+        <span class="badge"><?php echo htmlspecialchars($property['toilets']); ?> Toilets</span>
+        <?php if ($property['carpark'] > 0): ?>
+        <span class="badge">🅿️ <?php echo $property['carpark']; ?> Parking</span>
+        <?php endif; ?>
+        <?php if ($property['has_pool'] == 1): ?>
+        <span class="badge">🏊 Pool</span>
+        <?php endif; ?>
+        <?php if ($property['has_water_tank'] == 1): ?>
+        <span class="badge">💧 Water Tank</span>
+        <?php endif; ?>
+        <?php if ($property['has_ac'] == 1): ?>
+        <span class="badge">❄️ AC</span>
+        <?php endif; ?>
+        <?php if ($property['has_solar'] == 1): ?>
+        <span class="badge">☀️ Solar</span>
+        <?php endif; ?>
+        <?php if ($property['has_remote_gate'] == 1): ?>
+        <span class="badge">🚪 Remote Gate</span>
+        <?php endif; ?>
+        <?php if ($property['has_cctv'] == 1): ?>
+        <span class="badge">📹 CCTV</span>
+        <?php endif; ?>
+        <?php if ($property['has_wall_fence'] == 1): ?>
+        <span class="badge">🧱 Wall Fence</span>
+        <?php endif; ?>
+        <?php if ($property['has_electric_fence'] == 1): ?>
+        <span class="badge">⚡ Electric Fence</span>
+        <?php endif; ?>
+        <?php if ($property['geyser_type'] != 'none'): ?>
+        <span class="badge">🔥 <?php echo ucfirst($property['geyser_type']); ?> Geyser</span>
+        <?php endif; ?>
       </div>
     </header>
 
@@ -130,13 +161,13 @@ $resultImg = mysqli_query($conn, $sqlImg);
 
           <div class="host-info">
             <div class="host-avatar">
-              <!-- First letter of owner name -->
-              <?php echo strtoupper(substr($property['owner_name'], 0, 1)); ?>
+              <!-- First letter of contact person name -->
+              <?php echo strtoupper(substr($property['contact_person'], 0, 1)); ?>
             </div>
             <div>
-              <strong>Hosted by <?php echo htmlspecialchars($property['owner_name']); ?></strong>
-              <!-- Date Format: dd-mm-yyyy -->
-              <p class="text-muted">Listed on <?php echo date("d-m-Y", strtotime($property['created_at'])); ?></p>
+              <strong>Hosted by <?php echo htmlspecialchars($property['contact_person']); ?></strong>
+              <!-- Date Format: dd mmm yyyy -->
+              <p class="text-muted">Listed on <?php echo date("d M Y", strtotime($property['created_at'])); ?></p>
             </div>
           </div>
         </div>
@@ -163,11 +194,23 @@ $resultImg = mysqli_query($conn, $sqlImg);
             <h4><?php echo htmlspecialchars($property['contact_person']); ?></h4>
 
             <!-- Green Call Button -->
-            <a href="tel:<?php echo htmlspecialchars($property['contact_number']); ?>" class="phone-btn">
-              Contact Host
-            </a>
+            <div style="display: grid; gap: 10px;">
+                <a href="tel:<?php echo htmlspecialchars($property['contact_number']); ?>" class="phone-btn">
+                  📞 Call Host
+                </a>
+                
+                <?php 
+                    // Clean number for WhatsApp (remove spaces, symbols)
+                    $wa_number = preg_replace('/[^0-9]/', '', $property['contact_number']);
+                    // Improve: Start with 260 if starts with 0
+                    /* if(substr($wa_number, 0, 1) == '0') { $wa_number = '260' . substr($wa_number, 1); } */
+                ?>
+                <a href="https://wa.me/<?php echo $wa_number; ?>?text=Hi, I saw your property on Rent Direct: <?php echo urlencode($property['address']); ?>" target="_blank" class="phone-btn whatsapp-btn">
+                   💬 Chat on WhatsApp
+                </a>
+            </div>
 
-            <p class="text-small mt-2">Phone: <?php echo htmlspecialchars($property['contact_number']); ?></p>
+            <p class="text-small mt-2" style="margin-top: 10px; text-align: center;">Phone: <?php echo htmlspecialchars($property['contact_number']); ?></p>
           </div>
 
           <!-- Owner Zone (Collapsible) -->

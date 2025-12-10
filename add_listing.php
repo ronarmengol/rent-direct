@@ -120,16 +120,12 @@ if (isset($_POST['submit'])) {
         $error = "Database error: " . mysqli_error($conn);
     }
 }
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Rental Listing - Housing App</title>
-    <link rel="stylesheet" href="style.css">
+// Set page title and extra styles
+$page_title = "Add Rental Listing - Housing App";
+$extra_head = <<<EOT
     <style>
+        /* Checkbox Grid Styles */
         .checkbox-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -203,13 +199,251 @@ if (isset($_POST['submit'])) {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Page Layout Styles */
+        .page-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+        
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+        }
+        
+        .page-header p {
+            font-size: 1rem;
+            color: #64748b;
+        }
+
+        /* Form Grid - Masonry Style */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            transition: box-shadow 0.2s;
+        }
+
+        .form-section:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-section.full-width {
+            grid-column: span 2;
+        }
+
+        .form-section.description-section,
+        .form-section.photos-section {
+            grid-row: span 2;
+        }
+
+        /* Section Titles */
+        .section-title {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .section-title h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .section-title p {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin: 0;
+        }
+
+        /* Property Grid (4 columns inside full-width section) */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        /* Form Groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Submit Container */
+        .submit-container {
+            text-align: center;
+        }
+
+        .btn-submit {
+            min-width: 300px;
+            padding: 14px 32px;
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .property-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-section.full-width {
+                grid-column: span 1;
+            }
+
+            .form-section.description-section,
+            .form-section.photos-section {
+                grid-row: span 1;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-submit {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+
+        /* Username Validation Feedback */
+        .username-feedback {
+            margin-top: 8px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .username-feedback.checking {
+            color: #94a3b8;
+        }
+
+        .username-feedback.available {
+            color: #059669;
+        }
+
+        .username-feedback.taken {
+            color: #ef4444;
+        }
+
+        /* Drop Zone Styles */
+        .drop-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+        
+        .drop-zone:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #3b82f6;
+            background: #eff6ff;
+            border-style: solid;
+        }
+        
+        .drop-zone-content svg {
+            color: #94a3b8;
+            margin-bottom: 16px;
+        }
+        
+        .drop-zone-text {
+            font-size: 0.9375rem;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        
+        .browse-link {
+            color: #3b82f6;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        .drop-zone-hint {
+            font-size: 0.8125rem;
+            color: #94a3b8;
+        }
+        
+        .preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f1f5f9;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .preview-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        
+        .preview-remove:hover {
+            background: #ef4444;
+        }
+        
+        .file-count {
+            margin-top: 12px;
+            font-size: 0.8125rem;
+            color: #64748b;
+            text-align: center;
+        }
     </style>
-</head>
-<body>
-    <nav class="navbar">
-        <div class="brand"><a href="index.php">Housing App</a></div>
-        <div><a href="index.php">Home</a></div>
-    </nav>
+EOT;
+
+include 'header.php';
+?>
 
     <div class="container" style="max-width: 1200px;">
         <div class="page-header">
@@ -478,247 +712,7 @@ if (isset($_POST['submit'])) {
         </form>
     </div>
 
-    <style>
-        /* Page Header */
-        .page-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-        
-        .page-header h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 8px;
-        }
-        
-        .page-header p {
-            font-size: 1rem;
-            color: #64748b;
-        }
 
-        /* Form Grid - Masonry Style */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        /* Form Sections */
-        .form-section {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 24px;
-            transition: box-shadow 0.2s;
-        }
-
-        .form-section:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .form-section.full-width {
-            grid-column: span 2;
-        }
-
-        .form-section.description-section,
-        .form-section.photos-section {
-            grid-row: span 2;
-        }
-
-        /* Section Titles */
-        .section-title {
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .section-title h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 4px;
-        }
-
-        .section-title p {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin: 0;
-        }
-
-        /* Property Grid (4 columns inside full-width section) */
-        .property-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        /* Form Groups */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Submit Container */
-        .submit-container {
-            text-align: center;
-        }
-
-        .btn-submit {
-            min-width: 300px;
-            padding: 14px 32px;
-            font-size: 1rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .property-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-section.full-width {
-                grid-column: span 1;
-            }
-
-            .form-section.description-section,
-            .form-section.photos-section {
-                grid-row: span 1;
-            }
-
-            .property-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .btn-submit {
-                width: 100%;
-                min-width: auto;
-            }
-        }
-
-        /* Username Validation Feedback */
-        .username-feedback {
-            margin-top: 8px;
-            font-size: 0.8125rem;
-            font-weight: 500;
-            transition: all 0.2s;
-        }
-
-        .username-feedback.checking {
-            color: #94a3b8;
-        }
-
-        .username-feedback.available {
-            color: #059669;
-        }
-
-        .username-feedback.taken {
-            color: #ef4444;
-        }
-
-        /* Drop Zone Styles */
-        .drop-zone {
-            border: 2px dashed #cbd5e1;
-            border-radius: 12px;
-            padding: 48px 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: #f8fafc;
-        }
-        
-        .drop-zone:hover {
-            border-color: #3b82f6;
-            background: #eff6ff;
-        }
-        
-        .drop-zone.drag-over {
-            border-color: #3b82f6;
-            background: #eff6ff;
-            border-style: solid;
-        }
-        
-        .drop-zone-content svg {
-            color: #94a3b8;
-            margin-bottom: 16px;
-        }
-        
-        .drop-zone-text {
-            font-size: 0.9375rem;
-            color: #475569;
-            margin-bottom: 8px;
-        }
-        
-        .browse-link {
-            color: #3b82f6;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        
-        .drop-zone-hint {
-            font-size: 0.8125rem;
-            color: #94a3b8;
-        }
-        
-        .preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 16px;
-        }
-        
-        .preview-item {
-            position: relative;
-            aspect-ratio: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #f1f5f9;
-        }
-        
-        .preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .preview-remove {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 24px;
-            height: 24px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            transition: background 0.2s;
-        }
-        
-        .preview-remove:hover {
-            background: #ef4444;
-        }
-        
-        .file-count {
-            margin-top: 12px;
-            font-size: 0.8125rem;
-            color: #64748b;
-            text-align: center;
-        }
-    </style>
 
     <script>
         const dropZone = document.getElementById('drop-zone');

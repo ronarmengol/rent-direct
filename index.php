@@ -108,171 +108,159 @@ $total_pages = ceil($total_items / $items_per_page);
 $sql .= " LIMIT $items_per_page OFFSET $offset";
 
 $result = mysqli_query($conn, $sql);
+
+$page_title = "Housing App - Find a Home";
+$extra_head = '
+    <style>
+        .pagination-btn:hover,
+        .pagination-number:hover {
+            background: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .pagination-number.active:hover {
+            background: #2563eb !important;
+            border-color: #2563eb !important;
+        }
+
+        /* Search Input */
+        .search-input {
+            border-radius: 50px 0 0 50px !important;
+        }
+
+        /* Glassmorphism Search Button */
+        .search-btn {
+            background: rgba(59, 130, 246, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 0 50px 50px 0 !important;
+            color: white !important;
+            font-weight: 600 !important;
+            padding: 14px 32px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .search-btn:hover {
+            background: rgba(59, 130, 246, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        .search-btn:active {
+            transform: translateY(0) !important;
+        }
+
+        /* Parallax Hero Section */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            --parallax-offset: 0px;
+        }
+
+        .hero-section::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: calc(100% + 100px);
+            background-image: inherit;
+            background-size: cover;
+            background-position: center;
+            transform: translateY(var(--parallax-offset)) translateZ(0);
+            will-change: transform;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.6) 0%,
+                rgba(0, 0, 0, 0.4) 50%,
+                rgba(0, 0, 0, 0.6) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* List it for Free Button - Glassmorphism */
+        .btn-glass {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 50px !important;
+            color: white !important;
+            font-weight: 600 !important;
+            padding: 12px 28px !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .btn-glass:hover {
+            background: rgba(59, 130, 246, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        .btn-glass:active {
+            transform: translateY(0) !important;
+        }
+
+        /* Glassmorphism for Feature Cards */
+        .market-col {
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            border: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Renter Card - Blue Tint */
+        .renter-col {
+            background: rgba(59, 130, 246, 0.15) !important;
+        }
+
+        .renter-col:hover {
+            background: rgba(59, 130, 246, 0.25) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        /* Owner/Landlord Card - Green Tint */
+        .owner-col {
+            background: rgba(16, 185, 129, 0.15) !important;
+        }
+
+        .owner-col:hover {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.2) !important;
+        }
+    </style>
+';
+include "header.php";
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- PWA Manifest & Meta -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#3b82f6">
-  <link rel="apple-touch-icon" href="app-icon.png">
-
-  <title>Housing App - Find a Home</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .pagination-btn:hover,
-    .pagination-number:hover {
-      background: #f1f5f9 !important;
-      border-color: #cbd5e1 !important;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .pagination-number.active:hover {
-      background: #2563eb !important;
-      border-color: #2563eb !important;
-    }
-
-    /* Search Input */
-    .search-input {
-      border-radius: 50px 0 0 50px !important;
-    }
-
-    /* Glassmorphism Search Button */
-    .search-btn {
-      background: rgba(59, 130, 246, 0.3) !important;
-      backdrop-filter: blur(10px) !important;
-      -webkit-backdrop-filter: blur(10px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.4) !important;
-      border-radius: 0 50px 50px 0 !important;
-      color: white !important;
-      font-weight: 600 !important;
-      padding: 14px 32px !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
-    }
-
-    .search-btn:hover {
-      background: rgba(59, 130, 246, 0.5) !important;
-      border-color: rgba(255, 255, 255, 0.6) !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
-    }
-
-    .search-btn:active {
-      transform: translateY(0) !important;
-    }
-
-    /* Parallax Hero Section */
-    .hero-section {
-      position: relative;
-      overflow: hidden;
-      --parallax-offset: 0px;
-    }
-
-    .hero-section::before {
-      content: '';
-      position: absolute;
-      top: -50px;
-      left: 0;
-      width: 100%;
-      height: calc(100% + 100px);
-      background-image: inherit;
-      background-size: cover;
-      background-position: center;
-      transform: translateY(var(--parallax-offset)) translateZ(0);
-      will-change: transform;
-    }
-
-    .hero-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg,
-          rgba(0, 0, 0, 0.6) 0%,
-          rgba(0, 0, 0, 0.4) 50%,
-          rgba(0, 0, 0, 0.6) 100%);
-      z-index: 1;
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-    }
-
-    /* List it for Free Button - Glassmorphism */
-    .btn-glass {
-      display: inline-block;
-      background: rgba(59, 130, 246, 0.3) !important;
-      backdrop-filter: blur(10px) !important;
-      -webkit-backdrop-filter: blur(10px) !important;
-      border: 1px solid rgba(255, 255, 255, 0.4) !important;
-      border-radius: 50px !important;
-      color: white !important;
-      font-weight: 600 !important;
-      padding: 12px 28px !important;
-      text-decoration: none !important;
-      cursor: pointer !important;
-      transition: all 0.3s ease !important;
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
-    }
-
-    .btn-glass:hover {
-      background: rgba(59, 130, 246, 0.5) !important;
-      border-color: rgba(255, 255, 255, 0.6) !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
-    }
-
-    .btn-glass:active {
-      transform: translateY(0) !important;
-    }
-
-    /* Glassmorphism for Feature Cards */
-    .market-col {
-      backdrop-filter: blur(5px) !important;
-      -webkit-backdrop-filter: blur(5px) !important;
-      border: 1px solid rgba(255, 255, 255, 1) !important;
-      border-radius: 16px !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-      transition: all 0.3s ease !important;
-    }
-
-    /* Renter Card - Blue Tint */
-    .renter-col {
-      background: rgba(59, 130, 246, 0.15) !important;
-    }
-
-    .renter-col:hover {
-      background: rgba(59, 130, 246, 0.25) !important;
-      border-color: rgba(255, 255, 255, 1) !important;
-      transform: translateY(-4px) !important;
-      box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2) !important;
-    }
-
-    /* Owner/Landlord Card - Green Tint */
-    .owner-col {
-      background: rgba(16, 185, 129, 0.15) !important;
-    }
-
-    .owner-col:hover {
-      background: rgba(16, 185, 129, 0.25) !important;
-      border-color: rgba(255, 255, 255, 1) !important;
-      transform: translateY(-4px) !important;
-      box-shadow: 0 12px 40px rgba(16, 185, 129, 0.2) !important;
-    }
-  </style>
-</head>
-
-<body>
 
   <!-- MESSAGE LOGIC -->
   <?php if (isset($_SESSION['msg'])): ?>
@@ -297,21 +285,6 @@ $result = mysqli_query($conn, $sql);
     </script>
   <?php endif; ?>
 
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="brand">
-      <a href="index.php">
-        <!-- Image Logo -->
-        <img src="house-logo.png" alt="Logo">
-        <!-- New Text Logo -->
-        Rent Direct
-      </a>
-    </div>
-    <button id="install-app-btn" class="nav-btn" style="display: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-      <span>📲</span> Install App
-    </button>
-  </nav>
 
   <!-- HERO SECTION -->
   <div class="hero-section">
@@ -612,60 +585,5 @@ $result = mysqli_query($conn, $sql);
 
   <?php include 'footer.php'; ?>
 
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(registration => {
-            console.log('ServiceWorker registration successful');
-          })
-          .catch(err => {
-            console.log('ServiceWorker registration failed: ', err);
-          });
-      });
-    }
-
-    // PWA Install Logic
-    let deferredPrompt;
-    const installBtn = document.getElementById('install-app-btn');
-
-    // Hide button initially
-    installBtn.style.display = 'none';
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent Chrome 67 and earlier from automatically showing the prompt
-      e.preventDefault();
-      // Stash the event so it can be triggered later.
-      deferredPrompt = e;
-      // Update UI to notify the user they can add to home screen
-      installBtn.style.display = 'flex';
-    });
-
-    installBtn.addEventListener('click', (e) => {
-      // Hide the app provided install promotion
-      installBtn.style.display = 'none';
-      // Show the install prompt
-      deferredPrompt.prompt();
-      // Wait for the user to respond to the prompt
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the A2HS prompt');
-        } else {
-          console.log('User dismissed the A2HS prompt');
-          // Show button again if dismissed? 
-          // Usually better to leave it hidden until next reload or based on logic.
-        }
-        deferredPrompt = null;
-      });
-    });
-
-    // Optional: Hide button if app is already installed
-    window.addEventListener('appinstalled', () => {
-      installBtn.style.display = 'none';
-      console.log('PWA was installed');
-    });
-  </script>
-
 </body>
-
 </html>

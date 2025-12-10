@@ -27,69 +27,65 @@ if (!$property) {
 // 4. Fetch Images ordered by display_order
 $sqlImg = "SELECT * FROM property_images WHERE property_id = '$id' ORDER BY display_order ASC, id ASC";
 $resultImg = mysqli_query($conn, $sqlImg);
-?>
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?php echo htmlspecialchars($property['city']); ?> Rental - Rent Direct</title>
-  <link rel="stylesheet" href="style.css">
-</head>
+// Set page title
+$page_title = htmlspecialchars($property['city']) . " Rental - Rent Direct";
 
-<body>
-
-  <!-- MESSAGE LOGIC (Toast Notifications) -->
-  <?php if (isset($_SESSION['msg'])): ?>
-    <div class="notification-toast <?php echo $_SESSION['msg_type']; ?>" id="notification">
-      <?php
-      echo $_SESSION['msg'];
-      unset($_SESSION['msg']);
-      unset($_SESSION['msg_type']);
-      ?>
-    </div>
-    <script>
-      setTimeout(function() {
-        var box = document.getElementById('notification');
-        if (box) {
-          box.style.opacity = '0';
-          setTimeout(function() {
-            box.remove();
-          }, 1000);
+// Force reload script for back button navigation
+// Force reload script for back button navigation & Custom Styles
+$extra_head = <<<EOT
+<style>
+    /* WhatsApp Button Brand Color */
+    .whatsapp-btn {
+        background-color: #25D366 !important; /* WhatsApp Green */
+    }
+    .whatsapp-btn:hover {
+        background-color: #128C7E !important;
+    }
+    
+    /* Ensure gallery images fit */
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Better spacing for mobile header */
+    @media (max-width: 768px) {
+        .property-header {
+            flex-direction: column;
+            gap: 16px;
         }
-      }, 15000);
-    </script>
-  <?php endif; ?>
-
-  <!-- Force reload when navigating back to this page -->
-  <script>
-    // Detect if page was loaded from cache (back button)
+        .prop-meta {
+            width: 100%;
+        }
+        .details-container {
+            flex-direction: column;
+        }
+        .left-column, .right-column-wrapper {
+            width: 100%;
+        }
+        .sticky-sidebar {
+            position: relative;
+            top: 0;
+        }
+    }
+</style>
+<script>
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
-        // Page was loaded from bfcache (back/forward cache)
         window.location.reload();
       }
     });
-    
-    // Alternative method for older browsers
     if (performance.navigation.type === 2) {
-      // Page was accessed by navigating back
       window.location.reload();
     }
-  </script>
+</script>
+EOT;
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="brand">
-      <a href="index.php">
-        <img src="house-logo.png" alt="Logo">
-        Rent Direct
-      </a>
-    </div>
-    <div><a href="index.php">Home</a></div>
-  </nav>
+include 'header.php';
+?>
 
   <div class="container" style="margin-top: 40px;">
 

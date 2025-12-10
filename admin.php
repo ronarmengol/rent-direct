@@ -25,15 +25,14 @@ $resultImg = mysqli_query($conn, $sqlImg);
 $imageCount = mysqli_num_rows($resultImg);
 $maxImages = 10;
 $canUpload = $imageCount < $maxImages;
-?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Listing #<?php echo str_pad($property['id'], 4, '0', STR_PAD_LEFT); ?></title>
-    <link rel="stylesheet" href="style.css">
+
+// Set page info for header.php
+$page_title = "Manage Listing #" . str_pad($property['id'], 4, '0', STR_PAD_LEFT);
+$body_class = "admin-page";
+$hide_navbar = true; // Use admin-specific navbar
+
+$extra_head = <<<EOT
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
@@ -877,24 +876,10 @@ $canUpload = $imageCount < $maxImages;
             margin: 0;
         }
     </style>
-</head>
-<body class="admin-page">
+EOT;
 
-    <!-- MESSAGE LOGIC -->
-    <?php if(isset($_SESSION['msg'])): ?>
-        <div class="notification-toast <?php echo $_SESSION['msg_type']; ?>" id="notification">
-            <?php echo $_SESSION['msg']; unset($_SESSION['msg']); unset($_SESSION['msg_type']); ?>
-        </div>
-        <script>
-            setTimeout(function() {
-                var box = document.getElementById('notification');
-                if(box) {
-                    box.style.opacity = '0';
-                    setTimeout(function(){ box.remove(); }, 1000);
-                }
-            }, 5000);
-        </script>
-    <?php endif; ?>
+include 'header.php';
+?>
 
     <!-- Navbar -->
     <nav class="admin-nav">

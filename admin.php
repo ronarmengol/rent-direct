@@ -923,6 +923,7 @@ $canUpload = $imageCount < $maxImages;
             
             <!-- Basic Info Card -->
             <form id="property-details-form" class="grid-item">
+                <input type="hidden" name="update_section" value="basic">
                 <input type="hidden" name="property_id" value="<?php echo $property['id']; ?>">
                 
                 <div class="admin-card">
@@ -1000,6 +1001,7 @@ $canUpload = $imageCount < $maxImages;
 
             <!-- Amenities Card -->
             <form id="amenities-form" class="grid-item">
+                <input type="hidden" name="update_section" value="amenities">
                 <input type="hidden" name="property_id" value="<?php echo $property['id']; ?>">
                 <div class="admin-card">
                     <div class="admin-card-header">
@@ -1056,6 +1058,7 @@ $canUpload = $imageCount < $maxImages;
 
             <!-- Contact & Pricing Card -->
             <form id="contact-pricing-form" class="grid-item">
+                <input type="hidden" name="update_section" value="contact">
                 <input type="hidden" name="property_id" value="<?php echo $property['id']; ?>">
                 <div class="admin-card">
                     <div class="admin-card-header">
@@ -1686,6 +1689,9 @@ $canUpload = $imageCount < $maxImages;
             
             fetch('update_property.php', {
                 method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 body: formData
             })
             .then(response => response.json())
@@ -1730,6 +1736,9 @@ $canUpload = $imageCount < $maxImages;
             
             fetch('update_property.php', {
                 method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 body: formData
             })
             .then(response => response.json())
@@ -1761,6 +1770,9 @@ $canUpload = $imageCount < $maxImages;
             
             fetch('update_property.php', {
                 method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
                 body: formData
             })
             .then(response => response.json())

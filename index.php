@@ -143,6 +143,140 @@ $result = mysqli_query($conn, $sql);
             background: #2563eb !important;
             border-color: #2563eb !important;
         }
+
+        /* Search Input */
+        .search-input {
+            border-radius: 50px 0 0 50px !important;
+        }
+
+        /* Glassmorphism Search Button */
+        .search-btn {
+            background: rgba(59, 130, 246, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 0 50px 50px 0 !important;
+            color: white !important;
+            font-weight: 600 !important;
+            padding: 14px 32px !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .search-btn:hover {
+            background: rgba(59, 130, 246, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        .search-btn:active {
+            transform: translateY(0) !important;
+        }
+
+        /* Parallax Hero Section */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            --parallax-offset: 0px;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: calc(100% + 100px);
+            background-image: inherit;
+            background-size: cover;
+            background-position: center;
+            transform: translateY(var(--parallax-offset)) translateZ(0);
+            will-change: transform;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 0, 0, 0.6) 0%,
+                rgba(0, 0, 0, 0.4) 50%,
+                rgba(0, 0, 0, 0.6) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* List it for Free Button - Glassmorphism */
+        .btn-glass {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.3) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+            border-radius: 50px !important;
+            color: white !important;
+            font-weight: 600 !important;
+            padding: 12px 28px !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        .btn-glass:hover {
+            background: rgba(59, 130, 246, 0.5) !important;
+            border-color: rgba(255, 255, 255, 0.6) !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.3) !important;
+        }
+
+        .btn-glass:active {
+            transform: translateY(0) !important;
+        }
+
+        /* Glassmorphism for Feature Cards */
+        .market-col {
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            border: 1px solid rgba(255, 255, 255, 1) !important;
+            border-radius: 16px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        /* Renter Card - Blue Tint */
+        .renter-col {
+            background: rgba(59, 130, 246, 0.15) !important;
+        }
+
+        .renter-col:hover {
+            background: rgba(59, 130, 246, 0.25) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 40px rgba(59, 130, 246, 0.2) !important;
+        }
+
+        /* Owner/Landlord Card - Green Tint */
+        .owner-col {
+            background: rgba(16, 185, 129, 0.15) !important;
+        }
+
+        .owner-col:hover {
+            background: rgba(16, 185, 129, 0.25) !important;
+            border-color: rgba(255, 255, 255, 1) !important;
+            transform: translateY(-4px) !important;
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.2) !important;
+        }
     </style>
 </head>
 <body>
@@ -342,6 +476,19 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <script>
+        // Parallax Effect for Hero Section
+        const heroSection = document.querySelector('.hero-section');
+        
+        if (heroSection) {
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                const parallaxSpeed = 0.5;
+                
+                // Apply parallax transform to the ::before pseudo-element via CSS variable
+                heroSection.style.setProperty('--parallax-offset', scrolled * parallaxSpeed + 'px');
+            });
+        }
+
         // AJAX Search Functionality
         const searchForm = document.getElementById('search-form');
         const searchInput = document.getElementById('search-input');
